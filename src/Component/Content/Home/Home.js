@@ -62,11 +62,11 @@ export default function Home() {
     const [data, setData] = useState()
     var a = 2
     var url = 'https://free-to-play-games-database.p.rapidapi.com/api/games';
-    useEffect(() => {
-        fetch(url)
-            .then(response => response.json())
-            .then(res => console.log(res))
-    }, [])
+    // useEffect(() => {
+    //     fetch(url)
+    //         .then(response => response.json())
+    //         .then(res => console.log(res))
+    // }, [])
 
     const request = async () => {
         const url = 'https://free-to-play-games-database.p.rapidapi.com/api/games';
@@ -86,7 +86,7 @@ export default function Home() {
         }
     }
 
-    request()
+    // request()
     function btn() {
         setCurrent("123")
         console.log("btn  ");
@@ -102,7 +102,7 @@ export default function Home() {
     const img = "https://static1.bestie.vn/Mlog/UploadFacebookThumbs/201905/5-ly-do-khien-ban-nen-ra-rap-xem-avengers-endgame-ngay-0a29f7.jpg"
     return (
         <>
-            <Carousel autoplay>
+            {/* <Carousel autoplay>
                 <div>
                     <h3 style={contentStyle}>
                         <img src={img} />
@@ -124,8 +124,8 @@ export default function Home() {
                     </h3>
                 </div>
 
-            </Carousel>
-
+            </Carousel> */}
+            <div>Home</div>
         </>
     );
 }
