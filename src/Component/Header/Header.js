@@ -5,17 +5,16 @@ import { useHistory } from "react-router-dom"
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Menu, Dropdown, Space, message } from 'antd';
 import { useState, useEffect } from 'react';
-import { Carousel } from 'antd';
-
 import firebase from 'firebase/compat/app';
 import 'firebase/auth';
 import { AntDesignOutlined, UserOutlined, SmileOutlined, DownOutlined } from '@ant-design/icons';
-import { Avatar, Divider, Tooltip } from 'antd';
+import { Avatar, Divider, Affix } from 'antd';
 
 export default function Header() {
     const [current, setCurrent] = useState('mail');
     const history = useHistory();
     const [messageApi, contextHolder] = message.useMessage();
+    const [top, setTop] = useState(0);
 
     const [user, setUser] = useState({
         userName: '',
@@ -103,45 +102,47 @@ export default function Header() {
     return (
         <>
             {contextHolder}
-
-            <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal">
-                <Menu.Item key="" icon={<MailOutlined />}>
-                    Home
-                </Menu.Item>
-                <Menu.Item key="news" icon={<MailOutlined />}>
-                    News
-                </Menu.Item>
-                <Menu.Item key="about" icon={<AppstoreOutlined />}>
-                    About
-                </Menu.Item>
-                {!user ? (
-                    <Menu.Item key="login" icon={<SettingOutlined />}>
-                        Login
+            <Affix offsetTop={top}>
+                <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal">
+                    <Menu.Item key="" icon={<MailOutlined />}>
+                        Home
                     </Menu.Item>
-                ) : (
-                    <Menu.Item key="logout">
-                        <Button onClick={handleLogout}>Log Out</Button>
+                    <Menu.Item key="news" icon={<MailOutlined />}>
+                        News
                     </Menu.Item>
-                )}
-                {
-                    user ? (
-                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            {
-                                user.avt ? <Avatar src={user.avt} style={{ marginRight: 10 }} /> : <Avatar style={{ marginRight: 10 }} icon={<UserOutlined />} />
-                            }
-                            <Dropdown menu={{ items }}>
-                                <a onClick={(e) => e.preventDefault()}>
-                                    <Space>
-                                        {user?.userName}
-                                        <DownOutlined />
-                                    </Space>
-                                </a>
-                            </Dropdown>
-                        </div>
+                    <Menu.Item key="about" icon={<AppstoreOutlined />}>
+                        About
+                    </Menu.Item>
+                    {!user ? (
+                        <Menu.Item key="login" icon={<SettingOutlined />}>
+                            Login
+                        </Menu.Item>
+                    ) : (
+                        <Menu.Item key="logout">
+                            <Button onClick={handleLogout}>Log Out</Button>
+                        </Menu.Item>
+                    )}
+                    {
+                        user ? (
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                {
+                                    user.avt ? <Avatar src={user.avt} style={{ marginRight: 10 }} /> : <Avatar style={{ marginRight: 10 }} icon={<UserOutlined />} />
+                                }
+                                <Dropdown menu={{ items }}>
+                                    <a onClick={(e) => e.preventDefault()}>
+                                        <Space>
+                                            {user?.userName}
+                                            <DownOutlined />
+                                        </Space>
+                                    </a>
+                                </Dropdown>
+                            </div>
 
-                    ) : ''}
+                        ) : ''}
 
-            </Menu>
+                </Menu>
+            </Affix>
+
         </>
     )
 

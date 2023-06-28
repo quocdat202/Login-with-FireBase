@@ -4,35 +4,7 @@ import Login from '../../Login/Login'
 import { MailOutlined, SettingOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { Menu, Switch } from 'antd';
 import { useState, useEffect } from 'react';
-import { Carousel } from 'antd';
-function getItem(label, key, icon, children, type) {
-    return {
-        key,
-        icon,
-        children,
-        label,
-        type,
-    };
-}
-const items = [
-    getItem('Navigation One', 'sub1', <MailOutlined />, [
-        getItem('Option 1', '1'),
-        getItem('Option 2', '2'),
-        getItem('Option 3', '3'),
-        getItem('Option 4', '4'),
-    ]),
-    getItem('Navigation Two', 'sub2', <AppstoreOutlined />, [
-        getItem('Option 5', '5'),
-        getItem('Option 6', '6'),
-        getItem('Submenu', 'sub3', null, [getItem('Option 7', '7'), getItem('Option 8', '8')]),
-    ]),
-    getItem('Navigation Three', 'sub4', <SettingOutlined />, [
-        getItem('Option 9', '9'),
-        getItem('Option 10', '10'),
-        getItem('Option 11', '11'),
-        getItem('Option 12', '12'),
-    ]),
-];
+import { Carousel, Card, Col, Row } from 'antd';
 
 // const request = async () => {
 //     const url = 'https://free-to-play-games-database.p.rapidapi.com/api/games';
@@ -52,21 +24,16 @@ const items = [
 //     }
 // }
 
-
-
-
 export default function Home() {
     const [theme, setTheme] = useState('dark');
     const [current, setCurrent] = useState('1');
-
-    const [data, setData] = useState()
+    const { Meta } = Card;
+    const [data, setData] = useState([])
     var a = 2
     var url = 'https://free-to-play-games-database.p.rapidapi.com/api/games';
-    // useEffect(() => {
-    //     fetch(url)
-    //         .then(response => response.json())
-    //         .then(res => console.log(res))
-    // }, [])
+    useEffect(() => {
+        request()
+    }, [])
 
     const request = async () => {
         const url = 'https://free-to-play-games-database.p.rapidapi.com/api/games';
@@ -80,52 +47,98 @@ export default function Home() {
         try {
             const response = await fetch(url, options);
             const result = await response.json();
+            setData(result.slice(0, 50));
             console.log(result.slice(0, 50));
         } catch (error) {
             console.error(error);
         }
     }
 
-    // request()
+
     function btn() {
         setCurrent("123")
         console.log("btn  ");
     }
     const contentStyle = {
-        height: '160px',
+        height: '300px',
         color: '#fff',
         lineHeight: '160px',
         textAlign: 'center',
         background: '#364d79',
     };
 
-    const img = "https://static1.bestie.vn/Mlog/UploadFacebookThumbs/201905/5-ly-do-khien-ban-nen-ra-rap-xem-avengers-endgame-ngay-0a29f7.jpg"
+    const img = "https://cdn.sforum.vn/sforum/wp-content/uploads/2022/03/3-32.jpg"
+    const img2 = "https://bloghomestay.vn/wp-content/uploads/2023/01/999-anh-game-3d-hinh-game-online-dep-nhat-danh-cho-game-thu_22.jpg"
+    const img3 = "https://bloghomestay.vn/wp-content/uploads/2023/01/999-anh-game-3d-hinh-game-online-dep-nhat-danh-cho-game-thu_5.jpg"
+    const img4 = "https://bloghomestay.vn/wp-content/uploads/2023/01/999-anh-game-3d-hinh-game-online-dep-nhat-danh-cho-game-thu_8.jpg"
     return (
-        <>
-            {/* <Carousel autoplay>
+        <div style={{ width: '100%', height: 'auto' }}>
+
+            <Carousel autoplay>
                 <div>
                     <h3 style={contentStyle}>
-                        <img src={img} />
+                        <img style={{ width: '100%' }} src={img} />
                     </h3>
                 </div>
                 <div>
                     <h3 style={contentStyle}>
-                        <img src={img} />
+                        <img style={{ width: '100%' }} src={img2} />
                     </h3>
                 </div>
                 <div>
                     <h3 style={contentStyle}>
-                        <img src={img} />
+                        <img style={{ width: '100%' }} src={img3} />
                     </h3>
                 </div>
                 <div>
                     <h3 style={contentStyle}>
-                        <img src={img} />
+                        <img style={{ width: '100%' }} src={img4} />
                     </h3>
                 </div>
 
-            </Carousel> */}
-            <div>Home</div>
-        </>
+            </Carousel>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                <div style={{ display: 'flex', padding: 40, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
+                    {
+                        data?.length > 0 ? data?.map((item) => {
+                            return (
+                                <Card
+                                    hoverable
+                                    style={{
+                                        width: 320,
+                                        height: 390,
+                                        paddingBottom: 10,
+                                        marginRight: 20,
+                                        marginBottom: 20
+                                    }}
+                                    cover={
+                                        <img alt="example" src={item?.thumbnail} />
+                                    }
+                                    actions={[
+                                        <span style={{ fontWeight: '500', color: 'black' }}>Price: {(item?.id * 23).toLocaleString()}$</span>
+                                    ]}
+                                >
+                                    <Meta
+                                        title={item?.title}
+                                    />
+                                    <div className="card-description"
+                                        style={{
+                                            height: '70px',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: 3,
+                                            WebkitBoxOrient: 'vertical'
+                                        }}>
+                                        {item?.short_description}
+                                    </div>
+                                </Card>
+                            );
+                        }) : ''
+                    }
+                </div>
+            </div>
+
+        </div >
     );
 }

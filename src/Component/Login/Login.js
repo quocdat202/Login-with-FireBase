@@ -48,17 +48,6 @@ export default function Login() {
         }
     };
 
-    //login với facebook
-    const handleFacebookLogin = async () => {
-        try {
-            const provider = new firebase.auth.FacebookAuthProvider();
-            await firebase.auth().signInWithPopup(provider);
-            console.log('Đăng nhập thành công bằng tài khoản Facebook!');
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
-
     const firebaseConfig = {
         apiKey: "AIzaSyD0oIT41ohfR7qigkqrAWaAYe3Tz0y5D-A",
         authDomain: "spck-login.firebaseapp.com",
@@ -143,7 +132,6 @@ export default function Login() {
                 <div style={{ width: '35%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span>Or log in with: </span>
                     <Button icon={<GoogleOutlined />} onClick={handleGoogleLogin}>Google</Button>
-                    <Button icon={<FacebookOutlined />} onClick={handleFacebookLogin}>Facebook</Button>
                 </div>
                 {/* <StyledFirebaseAuth
                 onClick={handleGoogleLogin}
