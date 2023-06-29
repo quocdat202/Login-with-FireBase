@@ -1,5 +1,5 @@
 import React from 'react'
-import "../../Css/Header.css";
+import "../Css/Header.css";
 import { Link, NavLink } from 'react-router-dom/cjs/react-router-dom.min';
 import { useHistory } from "react-router-dom"
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
@@ -36,7 +36,6 @@ export default function Header() {
 
     // Login với tài khoản google
     useEffect(() => {
-
         const unregisterAuthObserver = firebase.auth().onAuthStateChanged(async (userLogin) => {
             if (!userLogin) {
                 // user logs out, handle something here
@@ -44,7 +43,7 @@ export default function Header() {
                 setUser(null);
                 return;
             }
-            console.log('Logged in user: ', userLogin.photoURL);
+            console.log('Logged in user: ', userLogin);
             setUser({ ...user, userName: userLogin.displayName, avt: userLogin.photoURL });
             history.push("/")
             notification("success", "Logged in successfully!")
@@ -54,20 +53,6 @@ export default function Header() {
 
         return () => unregisterAuthObserver();
     }, []);
-
-    // useEffect(() => {
-    //     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-    //         if (user) {
-    //             // Người dùng đã đăng nhập
-    //             setUser(user);
-    //         } else {
-    //             // Người dùng đã đăng xuất
-    //             setUser(null);
-    //         }
-    //     });
-
-    //     return () => unsubscribe();
-    // }, []);
 
     const handleLogout = async () => {
         try {
@@ -82,7 +67,7 @@ export default function Header() {
     const onClick = (e) => {
         // console.log('click ', e);
         setCurrent(e.key);
-        history.push(e.key)
+        history.push(`/${e.key}`);
     };
     const items = [
         {

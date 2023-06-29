@@ -1,15 +1,36 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from "react-router-dom"
-import { Button, Checkbox, Form, Input, message } from 'antd';
+import { Button, Radio, Form, Input, message, Col, Row } from 'antd';
 import firebase from 'firebase/compat/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 import { GoogleOutlined, FacebookOutlined } from '@ant-design/icons';
+import gamecenter from '../../asset/image/gamecenter.png'
+import search from '../../asset/image/search.png'
 export default function Login() {
-    const history = useHistory()
+
+    const [screenHeight, setScreenHeight] = useState(window.innerHeight);
     const [messageApi, contextHolder] = message.useMessage();
+    const history = useHistory()
     const [form] = Form.useForm();
+    const [loadings, setLoadings] = useState([]);
+
+
+    const enterLoading = (index) => {
+        setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[index] = true;
+            return newLoadings;
+        });
+        setTimeout(() => {
+            setLoadings((prevLoadings) => {
+                const newLoadings = [...prevLoadings];
+                newLoadings[index] = false;
+                return newLoadings;
+            });
+        }, 3000);
+    };
     const notification = (type, message) => {
         messageApi.open({
             type: type,
@@ -28,14 +49,19 @@ export default function Login() {
         }
     };
 
+    const handleGameCenterLogin = async () => {
+        try {
+            const provider = new firebase.auth.GameCenterAuthProvider();
+            await firebase.auth().signInWithPopup(provider);
+            console.log('Đăng nhập thành công bằng Game Center!');
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
     const onReset = () => {
         form.resetFields();
     };
-
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
-
 
     //login với google
     const handleGoogleLogin = async () => {
@@ -57,48 +83,64 @@ export default function Login() {
         appId: "1:1049609373762:web:ff5c79ce147950654745db",
         measurementId: "G-95N7JE8G8W"
     };
+
+    useEffect(() => {
+        const handleResize = () => {
+            setScreenHeight(window.innerHeight);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        // Clean up the event listener when component unmounts
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     return (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', width: '50%', justifyContent: 'center', alignItems: 'center' }}>
+        <Row style={{ height: screenHeight - 50 }}>
+            <Col span={12} >
+
+            </Col>
+            <Col span={12} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 {contextHolder}
-                <Form name="basic"
-                    labelCol={{
-                        span: 8,
-                    }}
-                    wrapperCol={{
-                        span: 16,
+                <div style={{ width: '35%', display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                    <span>Sign in with: </span>
+                    <Button
+                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                        onClick={handleGoogleLogin}> <img style={{ width: '15px', marginRight: 5 }} src={search} />
+                        Google
+                    </Button>
+                    <Button
+                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                        onClick={handleGameCenterLogin}>
+                        <img style={{ width: '15px', marginRight: 5 }} src={gamecenter} />
+                        Game Center
+                    </Button>
+                </div>
+                <Form
+                    onFinish={handleLogin}
+                    autoComplete="off"
+                    layout='vertical'
+                    form={form}
+                    initialValues={{
+                        layout: 'vertical',
                     }}
                     style={{
-                        width: '60%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center'
+                        maxWidth: 'none',
+                        width: '45%'
                     }}
-                    initialValues={{
-                        remember: true,
-                    }}
-                    onFinish={handleLogin}
-                    onFinishFailed={onFinishFailed}
-                    form={form}
-                    autoComplete="off">
-                    <Form.Item
-                        style={{ width: '100%' }}
-                        label="Email"
-                        name="email"
+                >
+                    <Form.Item label="Email" name="email"
                         rules={[
                             {
                                 required: true,
                                 message: 'Please input your email!',
                             },
                         ]}>
-                        <Input />
+                        <Input placeholder="Please input your email!" />
                     </Form.Item>
-
-                    <Form.Item
-                        style={{ width: '100%' }}
-
-                        label="Password"
+                    <Form.Item label="Password"
                         name="password"
                         rules={[
                             {
@@ -106,38 +148,20 @@ export default function Login() {
                                 message: 'Please input your password!',
                             },
                         ]} >
-                        <Input.Password />
+                        <Input.Password placeholder="Please input your password!" />
                     </Form.Item>
-
-                    <Form.Item
-                        style={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
-
-                        wrapperCol={{
-                            offset: 8,
-                            span: 16,
-                        }} >
-                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Button type="primary" htmlType="submit">
-                                Login
-                            </Button>
-                            <Button htmlType="button" onClick={onReset} style={{ marginLeft: 10 }}>
-                                Reset
-                            </Button>
-                        </div>
-                        <Button type="primary" style={{ marginTop: 10 }} onClick={() => history.push("/register")}>
-                            Register
+                    <Form.Item style={{ marginBottom: 10 }}>
+                        <Button type="primary" htmlType="submit" style={{ width: '100%' }} loading={loadings[0]} onClick={() => enterLoading(0)}>
+                            Login
+                        </Button>
+                    </Form.Item>
+                    <Form.Item >
+                        <Button type="primary" style={{ width: '100%' }} onClick={() => history.push("/register")} ghost>
+                            Sign up
                         </Button>
                     </Form.Item>
                 </Form>
-                <div style={{ width: '35%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span>Or log in with: </span>
-                    <Button icon={<GoogleOutlined />} onClick={handleGoogleLogin}>Google</Button>
-                </div>
-                {/* <StyledFirebaseAuth
-                onClick={handleGoogleLogin}
-            /> */}
-            </div>
-        </div>
-
+            </Col>
+        </Row>
     )
 }
