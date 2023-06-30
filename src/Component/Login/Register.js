@@ -61,12 +61,6 @@ export default function Register() {
         });
     };
 
-    const handleInputChange = (event) => {
-        console.log("🤔🤔🤔 ~ file: Register.js:34 ~ handleInputChange ~ event:", event)
-        return {
-        }
-    }
-
     return (
         <div>
             {contextHolder}
@@ -120,7 +114,7 @@ export default function Register() {
                     <Space style={{ width: '100%' }} direction="vertical" size="middle">
                         <Space.Compact style={{ width: '100%' }}>
                             <Input disabled style={{ width: '20%' }} defaultValue="+84" />
-                            <Input type="number" pattern="[0-9]*" style={{ width: '100%' }} onChange={handleInputChange} />
+                            <Input type="number" pattern="[0-9]*" style={{ width: '100%' }} />
                         </Space.Compact>
                     </Space>
                 </Form.Item>

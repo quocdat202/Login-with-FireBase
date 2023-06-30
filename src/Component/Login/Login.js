@@ -3,15 +3,13 @@ import { useHistory } from "react-router-dom"
 import { Button, Radio, Form, Input, message, Col, Row } from 'antd';
 import firebase from 'firebase/compat/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 import { GoogleOutlined, FacebookOutlined } from '@ant-design/icons';
 import gamecenter from '../../asset/image/gamecenter.png'
 import search from '../../asset/image/search.png'
-export default function Login() {
+export default function Login({ notification, user }) {
 
     const [screenHeight, setScreenHeight] = useState(window.innerHeight);
-    const [messageApi, contextHolder] = message.useMessage();
     const history = useHistory()
     const [form] = Form.useForm();
     const [loadings, setLoadings] = useState([]);
@@ -31,19 +29,12 @@ export default function Login() {
             });
         }, 3000);
     };
-    const notification = (type, message) => {
-        messageApi.open({
-            type: type,
-            content: message,
-        });
-    };
+
 
     const handleLogin = async (values) => {
         try {
             await firebase.auth().signInWithEmailAndPassword(values?.email, values?.password);
-            // notification("success", "Logged in successfully!")
-            // history.push("/")
-
+            history.push("/")
         } catch (error) {
             notification("error", "Login failed! Please check your Email and Password!")
         }
@@ -53,7 +44,7 @@ export default function Login() {
         try {
             const provider = new firebase.auth.GameCenterAuthProvider();
             await firebase.auth().signInWithPopup(provider);
-            console.log('Đăng nhập thành công bằng Game Center!');
+            history.push("/")
         } catch (error) {
             console.log(error.message);
         }
@@ -68,7 +59,7 @@ export default function Login() {
         try {
             const provider = new firebase.auth.GoogleAuthProvider();
             await firebase.auth().signInWithRedirect(provider);
-            console.log('Đăng nhập thành công bằng tài khoản Google!');
+            history.push("/")
         } catch (error) {
             console.log(error.message);
         }
@@ -103,7 +94,6 @@ export default function Login() {
 
             </Col>
             <Col span={12} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {contextHolder}
                 <div style={{ width: '35%', display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                     <span>Sign in with: </span>
                     <Button
