@@ -19,6 +19,7 @@ export default function Header({ notification, user }) {
     const handleLogout = async () => {
         try {
             await firebase.auth().signOut();
+            localStorage.removeItem("user");
             history.push("/")
             notification('success', 'Logout success !')
         } catch (error) {
@@ -72,7 +73,7 @@ export default function Header({ notification, user }) {
                         user ? (
                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 {
-                                    user?.avt !== '' ? <Avatar src={user?.avt} style={{ marginRight: 10 }} /> : <Avatar style={{ marginRight: 10 }} icon={<UserOutlined />} />
+                                    user?.avt ? <Avatar src={user?.avt} style={{ marginRight: 10 }} /> : <Avatar style={{ marginRight: 10 }} icon={<UserOutlined />} />
                                 }
                                 <Dropdown menu={{ items }}>
                                     <a onClick={(e) => e.preventDefault()}>

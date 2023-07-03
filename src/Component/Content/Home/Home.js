@@ -32,8 +32,8 @@ export default function Home() {
         try {
             const response = await fetch(url, options);
             const result = await response.json();
-            setData(result.slice(0, 50));
-            console.log(result.slice(0, 50));
+            setData(result.slice(100, 150));
+            console.log(result.slice(100, 150));
         } catch (error) {
             console.error(error);
         }

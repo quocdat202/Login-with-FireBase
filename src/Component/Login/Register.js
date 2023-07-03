@@ -19,10 +19,11 @@ export default function Register() {
         console.log("🤔🤔🤔 ~ file: Register.js:18 ~ handleSignup ~ value:", value)
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
         const phoneRegex = /^\d{9}$/;
+        openNotification('top')
         if (!emailRegex.test(value?.email)) {
-            // alert("Please enter a valid email address")
+            alert("Please enter a valid email address")
             // return false;
-            openNotification('top')
+            // openNotification('top')
         } else if (!phoneRegex.test(value?.phoneNumber)) {
             alert("Please enter a valid phone number")
             return false;
@@ -40,23 +41,28 @@ export default function Register() {
                 // Cập nhật thông tin người dùng với tên đăng nhập
                 await result.user.updateProfile({
                     displayName: value?.username,
-                    phoneNumber: value?.phoneNumber
                     // photoURL
                 });
 
+                // Lưu số điện thoại vào Firestore
+                const userRef = firebase.firestore().collection('users').doc(result.user.uid);
+                await userRef.set({
+                    phoneNumber: Number(value?.phoneNumber),
+                });
+
+                history.push('/');
                 console.log('Đăng ký thành công!');
-                console.log('Thông tin người dùng:', result.user.displayName);
+                console.log('Thông tin người dùng:', result.user.phoneNumber);
             } catch (error) {
-                console.log(error.message);
+                console.log(error);
             }
         }
     };
 
     const openNotification = (placement) => {
-        api['error'].info({
+        notification.info({
             message: `Notification ${placement}`,
-            description:
-                'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+            description: 'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
             placement,
         });
     };

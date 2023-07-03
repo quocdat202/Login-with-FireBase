@@ -52,6 +52,7 @@ function App() {
       }
       console.log('Logged in user: ', userLogin);
       setUser({ ...user, userName: userLogin.displayName, avt: userLogin.photoURL });
+      localStorage.setItem("user", JSON.stringify(userLogin));
       notification("success", "Logged in successfully!")
       // const token = await userLogin.getIdToken();
       // console.log('Logged in user token: ', token);
