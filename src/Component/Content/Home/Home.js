@@ -1,11 +1,14 @@
-import { Card, Carousel } from 'antd';
+import { Button, Card, Carousel, Pagination } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import '../../../Css/HomeCss.css';
 
-export default function Home() {
+export default function Home({ user }) {
     const { Meta } = Card;
     const [data, setData] = useState([])
+    const [offset, setOffset] = useState(0)
+    const [limit, setLimit] = useState(10)
+
     const history = useHistory()
     const url = 'https://free-to-play-games-database.p.rapidapi.com/api/games';
     const img = "https://cdn.sforum.vn/sforum/wp-content/uploads/2022/03/3-32.jpg"
@@ -32,8 +35,7 @@ export default function Home() {
         try {
             const response = await fetch(url, options);
             const result = await response.json();
-            setData(result.slice(100, 150));
-            console.log(result.slice(100, 150));
+            setData(result);
         } catch (error) {
             console.error(error);
         }
@@ -42,6 +44,47 @@ export default function Home() {
     useEffect(() => {
         request()
     }, [])
+
+    const handlePageChange = (page, pageSize) => {
+        const newOffset = (page - 1) * pageSize;
+        setOffset(newOffset);
+        setLimit(pageSize);
+    };
+
+    const addToCart = (item) => {
+        const inCart = localStorage.getItem(`carts${user?.uid}`);
+        const cart = {
+            ...item,
+            userID: user?.uid,
+            quantity: 1
+        };
+
+        if (user?.uid) {
+            if (inCart) {
+                let isCart = JSON.parse(inCart);
+                let found = false;
+                isCart = isCart.map(element => {
+                    if (element.id === item?.id) {
+                        found = true;
+                        return { ...element, quantity: element.quantity + 1 };
+                    } else {
+                        return element;
+                    }
+                });
+
+                if (!found) {
+                    isCart.push(cart);
+                }
+
+                localStorage.setItem(`carts${user?.uid}`, JSON.stringify(isCart));
+            } else {
+                localStorage.setItem(`carts${user?.uid}`, JSON.stringify([cart]));
+            }
+        } else {
+            alert("Please login to continue");
+        }
+    };
+
 
     return (
         <div style={{ width: '100%', height: 'auto' }}>
@@ -72,10 +115,10 @@ export default function Home() {
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 <div style={{ display: 'flex', padding: 40, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
                     {
-                        data?.length > 0 ? data?.map((item) => {
+                        data?.length > 0 ? data.slice(offset, offset + limit).map((item) => {
                             return (
                                 <Card
-                                    onClick={() => history.push(`/game/${item?.id}`)}
+                                    // onClick={() => history.push(`/game/${item?.id}`)}
                                     hoverable
                                     style={{
                                         width: 320,
@@ -84,11 +127,12 @@ export default function Home() {
                                         marginRight: 20,
                                         marginBottom: 20
                                     }}
-                                    cover={
-                                        <img alt="example" src={item?.thumbnail} />
-                                    }
+                                    // cover={
+                                    //     <img alt={item?.thumbnail} src={item?.thumbnail} />
+                                    // }
                                     actions={[
-                                        <span style={{ fontWeight: '500', color: 'black' }}>Price: {(item?.id * 23).toLocaleString()}$</span>
+                                        <span style={{ fontWeight: '500', color: 'black' }}>Price: {(item?.id * 23).toLocaleString()}$</span>,
+                                        <Button onClick={() => addToCart(item)}>Add to cart</Button>
                                     ]}
                                 >
                                     <Meta
@@ -108,6 +152,18 @@ export default function Home() {
                                 </Card>
                             );
                         }) : ''
+                    }
+                </div>
+                <div>
+                    {
+                        data?.length > 0 && (
+                            <Pagination
+                                current={Math.floor(offset / limit) + 1}
+                                pageSize={limit}
+                                total={data.length}
+                                onChange={handlePageChange}
+                            />
+                        )
                     }
                 </div>
             </div>

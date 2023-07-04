@@ -54,8 +54,8 @@ export default function Header({ notification, user }) {
                     <Menu.Item key="" icon={<MailOutlined />}>
                         Home
                     </Menu.Item>
-                    <Menu.Item key="news" icon={<MailOutlined />}>
-                        News
+                    <Menu.Item key="cart" icon={<MailOutlined />}>
+                        Cart
                     </Menu.Item>
                     <Menu.Item key="about" icon={<AppstoreOutlined />}>
                         About
