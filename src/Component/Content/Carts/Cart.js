@@ -28,9 +28,9 @@ export default function Cart({ user }) {
                                     marginRight: 20,
                                     marginBottom: 20
                                 }}
-                                // cover={
-                                //     <img alt={item?.thumbnail} src={item?.thumbnail} />
-                                // }
+                                cover={
+                                    <img alt={item?.thumbnail} src={item?.thumbnail} />
+                                }
                                 actions={[
                                     <span style={{ fontWeight: '500', color: 'black' }}>Price: {((item?.id * 23) * item?.quantity).toLocaleString()}$</span>,
                                     <span style={{ fontWeight: '500', color: 'black' }}>Quantity: {item?.quantity}</span>
