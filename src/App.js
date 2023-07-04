@@ -14,7 +14,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/auth';
 import Register from './Component/Login/Register';
 import GameDetail from './Component/Content/GameDetail/GameDetail';
-import { Button, Radio, Form, Input, message, Col, Row } from 'antd';
+import { Button, Radio, Form, Input, message, Col, notification } from 'antd';
 import Cart from './Component/Content/Carts/Cart';
 
 function App() {
@@ -23,6 +23,8 @@ function App() {
     userName: '',
     avt: ''
   });
+  const [api, contextHolderNotification] = notification.useNotification();
+
   const history = useHistory()
 
   const config = {
@@ -32,14 +34,19 @@ function App() {
   };
   firebase.initializeApp(config);
 
-  const notification = (type, message) => {
+  const notificationLogin = (type, message) => {
     messageApi.open({
       type: type,
       content: message,
     });
   };
 
-
+  const openNotificationWithIcon = (type, message, description) => {
+    api[type]({
+      message: message,
+      description: description,
+    });
+  };
 
 
   useEffect(() => {
@@ -53,9 +60,7 @@ function App() {
       console.log('Logged in user: ', userLogin);
       setUser({ ...user, userName: userLogin.displayName, avt: userLogin.photoURL, uid: userLogin.uid });
       localStorage.setItem("user", JSON.stringify(userLogin));
-      notification("success", "Logged in successfully!")
-      // const token = await userLogin.getIdToken();
-      // console.log('Logged in user token: ', token);
+      notificationLogin("success", "Logged in successfully!")
     });
 
     return () => unregisterAuthObserver();
@@ -65,10 +70,11 @@ function App() {
     <Router>
       {contextHolder}
       <div className="App">
-        <Header notification={notification} user={user} />
+        <Header notificationLogin={notificationLogin} user={user} />
+        {contextHolderNotification}
         <Switch>
-          <Route path="/" exact component={() => <Home user={user} />}  ></Route>
-          <Route path="/login" exact component={() => <Login notification={notification} user={user} />}  ></Route>
+          <Route path="/" exact component={() => <Home user={user} openNotificationWithIcon={openNotificationWithIcon} />}  ></Route>
+          <Route path="/login" exact component={() => <Login notificationLogin={notificationLogin} user={user} />}  ></Route>
           <Route path="/cart" exact component={() => <Cart user={user} />}  ></Route>
           <Route path="/about" exact component={() => <About />}  ></Route>
           <Route path="/register" exact component={() => <Register />}  ></Route>

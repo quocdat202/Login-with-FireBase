@@ -1,14 +1,13 @@
-import { Button, Card, Carousel, Pagination } from 'antd';
+import { Button, Card, Carousel, Pagination, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import '../../../Css/HomeCss.css';
 
-export default function Home({ user }) {
+export default function Home({ user, openNotificationWithIcon }) {
     const { Meta } = Card;
     const [data, setData] = useState([])
     const [offset, setOffset] = useState(0)
     const [limit, setLimit] = useState(10)
-
     const history = useHistory()
     const url = 'https://free-to-play-games-database.p.rapidapi.com/api/games';
     const img = "https://cdn.sforum.vn/sforum/wp-content/uploads/2022/03/3-32.jpg"
@@ -51,6 +50,8 @@ export default function Home({ user }) {
         setLimit(pageSize);
     };
 
+
+
     const addToCart = (item) => {
         const inCart = localStorage.getItem(`carts${user?.uid}`);
         const cart = {
@@ -62,33 +63,34 @@ export default function Home({ user }) {
         if (user?.uid) {
             if (inCart) {
                 let isCart = JSON.parse(inCart);
-                let found = false;
+                let find = false;
                 isCart = isCart.map(element => {
                     if (element.id === item?.id) {
-                        found = true;
+                        find = true;
                         return { ...element, quantity: element.quantity + 1 };
                     } else {
                         return element;
                     }
                 });
 
-                if (!found) {
+                if (!find) {
                     isCart.push(cart);
                 }
 
                 localStorage.setItem(`carts${user?.uid}`, JSON.stringify(isCart));
+                return openNotificationWithIcon('success', "Success!", "Add cart successfully !")
             } else {
                 localStorage.setItem(`carts${user?.uid}`, JSON.stringify([cart]));
+                return openNotificationWithIcon('success', "Success!", "Add cart successfully !")
             }
         } else {
-            alert("Please login to continue");
+            return openNotificationWithIcon('warning', "Warning !", "Please login to continue !")
         }
     };
 
 
     return (
         <div style={{ width: '100%', height: 'auto' }}>
-
             <Carousel autoplay>
                 <div>
                     <h3 style={contentStyle}>
