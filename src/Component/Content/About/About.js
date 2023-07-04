@@ -38,7 +38,7 @@ const About = () => {
                 errorLevel="H"
                 size={size}
                 iconSize={size / 4}
-                value="https://s-wms.autonsi.com/"
+                value="https://free-game.vercel.app/"
                 icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
             />
         </div>

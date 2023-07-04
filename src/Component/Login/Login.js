@@ -36,6 +36,7 @@ export default function Login({ notification, user }) {
             await firebase.auth().signInWithEmailAndPassword(values?.email, values?.password);
             history.push("/")
         } catch (error) {
+            console.log(error)
             notification("error", "Login failed! Please check your Email and Password!")
         }
     };
