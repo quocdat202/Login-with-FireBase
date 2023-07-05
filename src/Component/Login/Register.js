@@ -45,6 +45,8 @@ export default function Register() {
                     displayName: value?.username,
                     // photoURL
                 });
+                console.log("🤔🤔🤔 ~ file: Register.js:48 ~ handleSignup ~ result.user:", result.user)
+                localStorage.setItem(`user_${result?.user?.uid}`, JSON.stringify({ phoneNumber: value.phoneNumber, address: value.address }))
                 history.push('/');
                 console.log('Đăng ký thành công!');
             } catch (error) {
@@ -119,6 +121,18 @@ export default function Register() {
                                     <Input disabled style={{ width: '20%' }} defaultValue="+84" />
                                     <Input type="number" pattern="[0-9]*" style={{ width: '100%' }} />
                                 </Space.Compact>
+                            </Space>
+                        </Form.Item>
+                        <Form.Item
+                            label="Address"
+                            name="address"
+                            rules={[
+                                {
+                                    message: 'Please input your address!',
+                                },
+                            ]}>
+                            <Space style={{ width: '100%' }} direction="vertical" size="middle">
+                                <Input style={{ width: '100%' }} />
                             </Space>
                         </Form.Item>
                         <Form.Item

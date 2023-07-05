@@ -49,7 +49,6 @@ function App() {
     });
   };
 
-
   useEffect(() => {
     const unregisterAuthObserver = firebase.auth().onAuthStateChanged(async (userLogin) => {
       if (!userLogin) {
@@ -59,7 +58,7 @@ function App() {
         return;
       }
       console.log('Logged in user: ', userLogin);
-      setUser({ ...user, userName: userLogin.displayName, avt: userLogin.photoURL, uid: userLogin.uid });
+      setUser({ ...user, userName: userLogin.displayName, avt: userLogin.photoURL, uid: userLogin.uid, email: userLogin.email });
       localStorage.setItem("user", JSON.stringify(userLogin));
       notificationLogin("success", "Logged in successfully!")
     });
