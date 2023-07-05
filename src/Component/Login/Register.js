@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory } from "react-router-dom"
-import { Button, Checkbox, Form, Input, Space, notification } from 'antd';
+import { Button, Checkbox, Form, Input, Space, notification, Col, Row } from 'antd';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -18,16 +18,18 @@ export default function Register() {
     const handleSignup = async (value) => {
         console.log("🤔🤔🤔 ~ file: Register.js:18 ~ handleSignup ~ value:", value)
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-        const phoneRegex = /^\d{9}$/;
+        // const phoneRegex = /^\d{9}$/;
         openNotification('top')
         if (!emailRegex.test(value?.email)) {
             alert("Please enter a valid email address")
             // return false;
             // openNotification('top')
-        } else if (!phoneRegex.test(value?.phoneNumber)) {
-            alert("Please enter a valid phone number")
-            return false;
-        } else if (value?.password.length < 6) {
+        }
+        // else if (!phoneRegex.test(value?.phoneNumber)) {
+        //     alert("Please enter a valid phone number")
+        //     return false;
+        // } 
+        else if (value?.password.length < 6) {
             alert("Please enter a password of 6 characters or more")
             return false;
         }
@@ -43,16 +45,8 @@ export default function Register() {
                     displayName: value?.username,
                     // photoURL
                 });
-
-                // Lưu số điện thoại vào Firestore
-                const userRef = firebase.firestore().collection('users').doc(result.user.uid);
-                await userRef.set({
-                    phoneNumber: Number(value?.phoneNumber),
-                });
-
                 history.push('/');
                 console.log('Đăng ký thành công!');
-                console.log('Thông tin người dùng:', result.user.phoneNumber);
             } catch (error) {
                 console.log(error);
             }
@@ -68,107 +62,111 @@ export default function Register() {
     };
 
     return (
-        <div>
+        <>
             {contextHolder}
-            <Form name="basic"
-                labelCol={{
-                    span: 8,
-                }}
-                wrapperCol={{
-                    span: 16,
-                }}
-                style={{
-                    maxWidth: 600,
-                }}
-                initialValues={{
-                    remember: true,
-                }}
-                onFinish={handleSignup}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-            >
-                <Form.Item
-                    label="User Name"
-                    name="username"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your User Name!',
-                        },
-                    ]} >
-                    <Input />
-                </Form.Item>
-                <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your email!',
-                        },
-                    ]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item
-                    label="Phone Number"
-                    name="phoneNumber"
-                    rules={[
-                        {
-                            message: 'Please input your Phone Number!',
-                        },
-                    ]}>
-                    <Space style={{ width: '100%' }} direction="vertical" size="middle">
-                        <Space.Compact style={{ width: '100%' }}>
-                            <Input disabled style={{ width: '20%' }} defaultValue="+84" />
-                            <Input type="number" pattern="[0-9]*" style={{ width: '100%' }} />
-                        </Space.Compact>
-                    </Space>
-                </Form.Item>
-                <Form.Item
-                    label="Password"
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your password!',
-                        },
-                    ]} >
-                    <Input.Password />
-                </Form.Item>
-                <Form.Item
-                    label="Confirm Password"
-                    name="confirmPassword"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Confirm your password!',
-                        },
-                    ]} >
-                    <Input.Password />
-                </Form.Item>
-                <Form.Item
-                    name="remember"
-                    valuePropName="checked"
-                    wrapperCol={{
-                        offset: 8,
-                        span: 16,
-                    }} >
-                    <Checkbox>Remember me</Checkbox>
-                </Form.Item>
+            <Row style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Col style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexWrap: 'wrap', padding: 20 }}>
+                    <Form name="basic"
+                        labelCol={{
+                            span: 8,
+                        }}
+                        wrapperCol={{
+                            span: 16,
+                        }}
+                        style={{
+                            maxWidth: 'none',
+                            width: '100%'
+                        }}
+                        initialValues={{
+                            remember: true,
+                        }}
+                        onFinish={handleSignup}
+                        onFinishFailed={onFinishFailed}
+                        autoComplete="off"
+                    >
+                        <Form.Item
+                            label="User Name"
+                            name="username"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your User Name!',
+                                },
+                            ]} >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            label="Email"
+                            name="email"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your email!',
+                                },
+                            ]}>
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            label="Phone Number"
+                            name="phoneNumber"
+                            rules={[
+                                {
+                                    message: 'Please input your Phone Number!',
+                                },
+                            ]}>
+                            <Space style={{ width: '100%' }} direction="vertical" size="middle">
+                                <Space.Compact style={{ width: '100%' }}>
+                                    <Input disabled style={{ width: '20%' }} defaultValue="+84" />
+                                    <Input type="number" pattern="[0-9]*" style={{ width: '100%' }} />
+                                </Space.Compact>
+                            </Space>
+                        </Form.Item>
+                        <Form.Item
+                            label="Password"
+                            name="password"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your password!',
+                                },
+                            ]} >
+                            <Input.Password />
+                        </Form.Item>
+                        <Form.Item
+                            label="Confirm Password"
+                            name="confirmPassword"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Confirm your password!',
+                                },
+                            ]} >
+                            <Input.Password />
+                        </Form.Item>
+                        <Form.Item
+                            name="remember"
+                            valuePropName="checked"
+                            wrapperCol={{
+                                offset: 8,
+                                span: 16,
+                            }} >
+                            <Checkbox>Remember me</Checkbox>
+                        </Form.Item>
 
-                <Form.Item
-                    wrapperCol={{
-                        offset: 8,
-                        span: 16,
-                    }} >
-                    <Button type="primary" onClick={() => history.push("/login")}>
-                        Login
-                    </Button>
-                    <Button type="primary" style={{ marginLeft: 10 }} htmlType="submit">
-                        Register
-                    </Button>
-                </Form.Item>
-            </Form>
-        </div>
+                        <Form.Item
+                            wrapperCol={{
+                                offset: 6,
+                            }} >
+                            <Button type="primary" onClick={() => history.push("/login")}>
+                                Login
+                            </Button>
+                            <Button type="primary" style={{ marginLeft: 10 }} htmlType="submit">
+                                Register
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Col>
+            </Row>
+        </>
     )
 }

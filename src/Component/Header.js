@@ -1,17 +1,12 @@
-import React from 'react'
-import "../Css/Header.css";
-import { Link, NavLink } from 'react-router-dom/cjs/react-router-dom.min';
-import { useHistory } from "react-router-dom"
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
-import { Button, Menu, Dropdown, Space, message } from 'antd';
-import { useState, useEffect } from 'react';
-import firebase from 'firebase/compat/app';
+import { AppstoreOutlined, DownOutlined, MailOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { Affix, Avatar, Button, Dropdown, Menu, Space } from 'antd';
 import 'firebase/auth';
-import { AntDesignOutlined, UserOutlined, SmileOutlined, DownOutlined } from '@ant-design/icons';
-import { Avatar, Divider, Affix } from 'antd';
+import firebase from 'firebase/compat/app';
+import React, { useState } from 'react';
+import { useHistory } from "react-router-dom";
+import "../Css/Header.css";
 
 export default function Header({ notification, user }) {
-    console.log("🤔🤔🤔 ~ file: Header.js:14 ~ Header ~ user:", user)
     const [current, setCurrent] = useState('mail');
     const history = useHistory();
     const [top, setTop] = useState(0);
@@ -42,7 +37,7 @@ export default function Header({ notification, user }) {
             key: '2',
         },
         {
-            label: '3rd menu item',
+            label: <Button onClick={handleLogout}>Log Out</Button>,
             key: '3',
         },
     ];
@@ -64,14 +59,10 @@ export default function Header({ notification, user }) {
                         <Menu.Item key="login" icon={<SettingOutlined />}>
                             Login
                         </Menu.Item>
-                    ) : (
-                        <Menu.Item key="logout">
-                            <Button onClick={handleLogout}>Log Out</Button>
-                        </Menu.Item>
-                    )}
+                    ) : ''}
                     {
                         user ? (
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Menu.Item style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 {
                                     user?.avt ? <Avatar src={user?.avt} style={{ marginRight: 10 }} /> : <Avatar style={{ marginRight: 10 }} icon={<UserOutlined />} />
                                 }
@@ -83,7 +74,7 @@ export default function Header({ notification, user }) {
                                         </Space>
                                     </a>
                                 </Dropdown>
-                            </div>
+                            </Menu.Item>
 
                         ) : ''}
 

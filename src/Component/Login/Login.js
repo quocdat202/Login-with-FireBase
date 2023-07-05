@@ -90,15 +90,12 @@ export default function Login({ notification, user }) {
     }, []);
 
     return (
-        <Row style={{ height: screenHeight - 50 }}>
-            <Col span={12} >
-
-            </Col>
-            <Col span={12} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ width: '35%', display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-                    <span>Sign in with: </span>
+        <Row style={{ height: screenHeight - 50, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Col style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <span style={{ paddingRight: 10 }}>Sign in with: </span>
                     <Button
-                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginRight: 10 }}
                         onClick={handleGoogleLogin}> <img style={{ width: '15px', marginRight: 5 }} src={search} />
                         Google
                     </Button>
@@ -119,7 +116,7 @@ export default function Login({ notification, user }) {
                     }}
                     style={{
                         maxWidth: 'none',
-                        width: '45%'
+                        width: '100%'
                     }}
                 >
                     <Form.Item label="Email" name="email"
