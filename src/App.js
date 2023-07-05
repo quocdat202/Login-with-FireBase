@@ -16,6 +16,7 @@ import Register from './Component/Login/Register';
 import GameDetail from './Component/Content/GameDetail/GameDetail';
 import { Button, Radio, Form, Input, message, Col, notification } from 'antd';
 import Cart from './Component/Content/Carts/Cart';
+import User from './Component/Content/InforUser/User';
 
 function App() {
   const [messageApi, contextHolder] = message.useMessage();
@@ -78,6 +79,7 @@ function App() {
           <Route path="/cart" exact component={() => <Cart user={user} />}  ></Route>
           <Route path="/about" exact component={() => <About />}  ></Route>
           <Route path="/register" exact component={() => <Register />}  ></Route>
+          <Route path="/information-user" exact component={() => <User user={user} />}  ></Route>
           <Route path="/game/:id" exact component={(match) => <GameDetail match={match} />}  ></Route>
         </Switch>
       </div>

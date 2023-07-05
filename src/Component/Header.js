@@ -1,5 +1,5 @@
-import { AppstoreOutlined, DownOutlined, MailOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Affix, Avatar, Button, Dropdown, Menu, Space } from 'antd';
+import { AppstoreOutlined, DownOutlined, MailOutlined, SettingOutlined, UserOutlined, SearchOutlined } from '@ant-design/icons';
+import { Affix, Avatar, Input, Dropdown, Menu, Space } from 'antd';
 import 'firebase/auth';
 import firebase from 'firebase/compat/app';
 import React, { useState } from 'react';
@@ -10,7 +10,6 @@ export default function Header({ notification, user }) {
     const [current, setCurrent] = useState('mail');
     const history = useHistory();
     const [top, setTop] = useState(0);
-
     const handleLogout = async () => {
         try {
             await firebase.auth().signOut();
@@ -29,34 +28,29 @@ export default function Header({ notification, user }) {
     };
     const items = [
         {
-            label: '1st menu item',
-            key: '1',
+            label: <div onClick={() => (setCurrent('information-user'), history.push('information-user'))}>User information</div>,
+            key: 'information-user'
         },
         {
-            label: '2nd menu item',
-            key: '2',
-        },
-        {
-            label: <Button onClick={handleLogout}>Log Out</Button>,
+            label: <div onClick={handleLogout}>Log Out</div>,
             key: '3',
         },
     ];
-
     return (
         <>
             <Affix offsetTop={top}>
-                <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal">
-                    <Menu.Item key="" icon={<MailOutlined />}>
+                <Menu selectedKeys={[current]} mode="horizontal">
+                    <Menu.Item onClick={onClick} key="" icon={<MailOutlined />}>
                         Home
                     </Menu.Item>
-                    <Menu.Item key="cart" icon={<MailOutlined />}>
+                    <Menu.Item onClick={onClick} key="cart" icon={<MailOutlined />}>
                         Cart
                     </Menu.Item>
-                    <Menu.Item key="about" icon={<AppstoreOutlined />}>
+                    <Menu.Item onClick={onClick} key="about" icon={<AppstoreOutlined />}>
                         About
                     </Menu.Item>
                     {!user ? (
-                        <Menu.Item key="login" icon={<SettingOutlined />}>
+                        <Menu.Item onClick={onClick} key="login" icon={<SettingOutlined />}>
                             Login
                         </Menu.Item>
                     ) : ''}
@@ -77,7 +71,6 @@ export default function Header({ notification, user }) {
                             </Menu.Item>
 
                         ) : ''}
-
                 </Menu>
             </Affix>
 

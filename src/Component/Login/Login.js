@@ -59,21 +59,11 @@ export default function Login({ notification, user }) {
     const handleGoogleLogin = async () => {
         try {
             const provider = new firebase.auth.GoogleAuthProvider();
-            await firebase.auth().signInWithRedirect(provider);
+            await firebase.auth().signInWithPopup(provider);
             history.push("/")
         } catch (error) {
             console.log(error.message);
         }
-    };
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyD0oIT41ohfR7qigkqrAWaAYe3Tz0y5D-A",
-        authDomain: "spck-login.firebaseapp.com",
-        projectId: "spck-login",
-        storageBucket: "spck-login.appspot.com",
-        messagingSenderId: "1049609373762",
-        appId: "1:1049609373762:web:ff5c79ce147950654745db",
-        measurementId: "G-95N7JE8G8W"
     };
 
     useEffect(() => {

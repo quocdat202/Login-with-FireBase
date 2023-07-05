@@ -1,4 +1,4 @@
-import { Button, Card, Carousel, Pagination, notification } from 'antd';
+import { Button, Card, Carousel, Pagination, Input, FloatButton } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import '../../../Css/HomeCss.css';
@@ -8,6 +8,8 @@ export default function Home({ user, openNotificationWithIcon }) {
     const [data, setData] = useState([])
     const [offset, setOffset] = useState(0)
     const [limit, setLimit] = useState(10)
+    const { Search } = Input;
+
     const history = useHistory()
     const url = 'https://free-to-play-games-database.p.rapidapi.com/api/games';
     const img = "https://cdn.sforum.vn/sforum/wp-content/uploads/2022/03/3-32.jpg"
@@ -23,7 +25,7 @@ export default function Home({ user, openNotificationWithIcon }) {
     };
 
 
-    const request = async () => {
+    const request = async (value) => {
         const options = {
             method: 'GET',
             headers: {
@@ -34,7 +36,7 @@ export default function Home({ user, openNotificationWithIcon }) {
         try {
             const response = await fetch(url, options);
             const result = await response.json();
-            setData(result);
+            value ? setData(result.filter((item) => item?.title?.toLowerCase().includes(value.toLowerCase()))) : setData(result)
         } catch (error) {
             console.error(error);
         }
@@ -49,8 +51,6 @@ export default function Home({ user, openNotificationWithIcon }) {
         setOffset(newOffset);
         setLimit(pageSize);
     };
-
-
 
     const addToCart = (item) => {
         const inCart = localStorage.getItem(`carts${user?.uid}`);
@@ -88,7 +88,6 @@ export default function Home({ user, openNotificationWithIcon }) {
         }
     };
 
-
     return (
         <div style={{ width: '100%', height: 'auto' }}>
             <Carousel autoplay>
@@ -115,12 +114,20 @@ export default function Home({ user, openNotificationWithIcon }) {
 
             </Carousel>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '50px 0' }}>
+                    <Search
+                        placeholder="input search name game"
+                        onSearch={request}
+                        style={{
+                            width: 300,
+                        }}
+                    />
+                </div>
                 <div style={{ display: 'flex', padding: 40, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
                     {
                         data?.length > 0 ? data.slice(offset, offset + limit).map((item) => {
                             return (
                                 <Card
-                                    // onClick={() => history.push(`/game/${item?.id}`)}
                                     hoverable
                                     style={{
                                         width: 320,
@@ -137,25 +144,28 @@ export default function Home({ user, openNotificationWithIcon }) {
                                         <Button onClick={() => addToCart(item)}>Add to cart</Button>
                                     ]}
                                 >
-                                    <Meta
-                                        title={item?.title}
-                                    />
-                                    <div className="card-description"
-                                        style={{
-                                            height: '70px',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: 3,
-                                            WebkitBoxOrient: 'vertical'
-                                        }}>
-                                        {item?.short_description}
+                                    <div onClick={() => history.push(`/game/${item?.id}`)}>
+                                        <Meta
+                                            title={item?.title}
+                                        />
+                                        <div className="card-description"
+                                            style={{
+                                                height: '70px',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                display: '-webkit-box',
+                                                WebkitLineClamp: 3,
+                                                WebkitBoxOrient: 'vertical'
+                                            }}>
+                                            {item?.short_description}
+                                        </div>
                                     </div>
                                 </Card>
                             );
                         }) : ''
                     }
                 </div>
+                <FloatButton.BackTop visibilityHeight={100} />
                 <div>
                     {
                         data?.length > 0 && (
