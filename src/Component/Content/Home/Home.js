@@ -57,7 +57,6 @@ export default function Home({ user, openNotificationWithIcon }) {
         const cart = {
             ...item,
             userID: user?.uid,
-            quantity: 1
         };
 
         if (user?.uid) {
@@ -67,8 +66,10 @@ export default function Home({ user, openNotificationWithIcon }) {
                 isCart = isCart.map(element => {
                     if (element.id === item?.id) {
                         find = true;
-                        return { ...element, quantity: element.quantity + 1 };
+                        openNotificationWithIcon('warning', "Warning !", "You have added this game to your cart!")
+                        return { ...element }
                     } else {
+                        // openNotificationWithIcon('success', "Success!", "Add cart successfully !")
                         return element;
                     }
                 });
@@ -78,7 +79,7 @@ export default function Home({ user, openNotificationWithIcon }) {
                 }
 
                 localStorage.setItem(`carts${user?.uid}`, JSON.stringify(isCart));
-                return openNotificationWithIcon('success', "Success!", "Add cart successfully !")
+                !find && (openNotificationWithIcon('success', "Success!", "Add cart successfully !"))
             } else {
                 localStorage.setItem(`carts${user?.uid}`, JSON.stringify([cart]));
                 return openNotificationWithIcon('success', "Success!", "Add cart successfully !")
@@ -136,9 +137,9 @@ export default function Home({ user, openNotificationWithIcon }) {
                                         marginRight: 20,
                                         marginBottom: 20
                                     }}
-                                    cover={
-                                        <img alt={item?.thumbnail} src={item?.thumbnail} />
-                                    }
+                                    // cover={
+                                    //     <img alt={item?.thumbnail} src={item?.thumbnail} />
+                                    // }
                                     actions={[
                                         <span style={{ fontWeight: '500', color: 'black' }}>Price: {(item?.id * 23).toLocaleString()}$</span>,
                                         <Button onClick={() => addToCart(item)}>Add to cart</Button>

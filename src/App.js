@@ -28,12 +28,16 @@ function App() {
 
   const history = useHistory()
 
-  const config = {
-    apiKey: 'AIzaSyD0oIT41ohfR7qigkqrAWaAYe3Tz0y5D-A',
-    authDomain: 'spck-login.firebaseapp.com',
-    // ...
+  const firebaseConfig = {
+    apiKey: "AIzaSyD0oIT41ohfR7qigkqrAWaAYe3Tz0y5D-A",
+    authDomain: "spck-login.firebaseapp.com",
+    projectId: "spck-login",
+    storageBucket: "spck-login.appspot.com",
+    messagingSenderId: "1049609373762",
+    appId: "1:1049609373762:web:ff5c79ce147950654745db",
+    measurementId: "G-95N7JE8G8W"
   };
-  firebase.initializeApp(config);
+  firebase.initializeApp(firebaseConfig);
 
   const notificationLogin = (type, message) => {
     messageApi.open({
@@ -61,6 +65,7 @@ function App() {
       setUser({ ...user, userName: userLogin.displayName, avt: userLogin.photoURL, uid: userLogin.uid, email: userLogin.email });
       localStorage.setItem("user", JSON.stringify(userLogin));
       notificationLogin("success", "Logged in successfully!")
+
     });
 
     return () => unregisterAuthObserver();

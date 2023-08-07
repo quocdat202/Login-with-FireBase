@@ -56,14 +56,33 @@ export default function Login({ notification, user }) {
     };
 
     //login với google
-    const handleGoogleLogin = async () => {
-        try {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            await firebase.auth().signInWithPopup(provider);
-            history.push("/")
-        } catch (error) {
-            console.log(error.message);
-        }
+    // const handleGoogleLogin = async () => {
+    //     try {
+    //         const provider = new firebase.auth.GoogleAuthProvider();
+    //         await firebase.auth().signInWithPopup(provider);
+    //         history.push("/")
+    //     } catch (error) {
+    //         console.log(error.message);
+    //     }
+    // };
+
+    const handleGoogleLogin = () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase
+            .auth()
+            .signInWithPopup(provider)
+            .then((result) => {
+                // Đăng nhập thành công
+                history.push("/")
+
+                const user = result;
+                console.log('Đăng nhập thành công:', user);
+            })
+            .catch((error) => {
+                // Xử lý lỗi đăng nhập
+                const errorMessage = error.message;
+                console.error('Lỗi đăng nhập:', errorMessage);
+            });
     };
 
     useEffect(() => {
@@ -90,7 +109,7 @@ export default function Login({ notification, user }) {
                         Google
                     </Button>
                     <Button
-                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontStyle: 'italic' }}
                         onClick={handleGameCenterLogin}>
                         <img style={{ width: '15px', marginRight: 5 }} src={gamecenter} />
                         Game Center
